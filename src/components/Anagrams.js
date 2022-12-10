@@ -7,6 +7,7 @@ import NavigationBarLoggedIn from "./NavigationBarLoggedIn";
 function Anagrams() {
 
     const [word, setWord] = useState("");
+    const [userWord, setUserWord] = useState("");
     const [mustLogIn, setMustLogIn] = useState(false);
     const [error, setError] = useState("");
     const [anagrams, setAnagrams] = useState([]);
@@ -15,13 +16,14 @@ function Anagrams() {
 
     function handleSubmit(e) {
         e.preventDefault();
+        setUserWord(word);
         setError("");
         setAnagrams([]);
         setLoading(true);
         if (sessionStorage.getItem("token")) {
             axios.get("https://anagrams-back.herokuapp.com/", 
             { params : {
-                word: word,
+                word: userWord,
                 email: sessionStorage.getItem("email"),
                 token: sessionStorage.getItem("token")
                 }
@@ -86,7 +88,7 @@ function Anagrams() {
 
         <Card style={{ marginLeft:"2rem", width:"30rem" }}>
             <Card.Body>
-                <h2>Anagrams for {word}</h2>
+                <h2>Anagrams for {userWord}</h2>
                 <Card.Text>
                     Let's see what we found...
                 </Card.Text>
