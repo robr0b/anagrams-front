@@ -16,14 +16,15 @@ function Anagrams() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        setUserWord(word);
+        setUserWord("");
         setError("");
         setAnagrams([]);
         setLoading(true);
+        
         if (sessionStorage.getItem("token")) {
             axios.get("https://anagrams-back.herokuapp.com/", 
             { params : {
-                word: userWord,
+                word: word,
                 email: sessionStorage.getItem("email"),
                 token: sessionStorage.getItem("token")
                 }
@@ -32,6 +33,7 @@ function Anagrams() {
         
                 if (response.data.success) {
                     setAnagrams(response.data.anagrams);
+                    setUserWord(word);
                 }
                 else if (response.data.message === "bad_token") {
                     setMustLogIn(true);
@@ -68,7 +70,7 @@ function Anagrams() {
             <Card.Body>
                 <h2>Find anagrams</h2>
                 <Card.Text>
-                    Entter a word to look for anagrams
+                    Enter a word to look for anagrams
                 </Card.Text>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
@@ -84,7 +86,7 @@ function Anagrams() {
         <br/>
 
         {   
-            anagrams.length !== 0 &&
+            userWord &&
 
         <Card style={{ marginLeft:"2rem", width:"30rem" }}>
             <Card.Body>
@@ -93,7 +95,7 @@ function Anagrams() {
                     Let's see what we found...
                 </Card.Text>
                 <Card.Text>
-                    {anagrams.join(", ")}
+                    {anagrams.length === 0 ? "No anagrams have been found! Try a different word!" : anagrams.join(", ")}
                 </Card.Text>
             </Card.Body>
         </Card>
